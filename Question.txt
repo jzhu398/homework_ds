@@ -1,0 +1,90 @@
+1. How long did it take you to solve the problem?
+From the beginning(check the data quality) to the end(score files), it took me 4 hours to finish it.
+
+2.1 what software language and libraries did you use to solve the problem?
+Python, 
+scikit-learn==0.24.2
+numpy==1.20.1
+pandas==1.2.0
+lightgbm == 3.2.1
+seaborn == 0.11.2
+matplotlib == 3.4.3
+category_encoders == 2.3.0
+
+2.2 why did you choose these langugae and libraries?
+python --- I used to python since I use it almost every day and it has powerful open source packages such as pandas, numpy, sklearn.
+scikit-learn --- split traning, validation sets and bring rmse metrics to value the "right" parameters of the model
+numpy --- turn data from dataframe pandas to np array. easy to plot in matplotlib!
+pandas --- read csv data to dataframe
+lightgbm --- lightGBM regressor is the model I used
+seaborn --- make the feature importance visable
+matplotlib --- plot feature importance and its column names
+category_encoders --- perform one hot encoding for categorical features
+
+3.1 what steps did you take to prepare the data for the project?
+I did general cleaning for the missing either in numrical and categorical features. I did one hot encoding for the categorical features. I dropped jobid and companyid since it won't help model predict much.
+
+3.2 was any cleaning necessary?
+No. I did not do outliers cleaning for numrical features since distance and years did not have "TRUE" outliers. 
+And I did not do "none" cleaning for categorical features since "none" means quite differently. "NaN" means missing by some reasons such as quality issue generally. But "None" means that "I do not know"
+
+4.1 what ML method did you apply?
+lightGBM regressor
+
+4.2 why did you choose this method?
+reason1: since this model is to use many weak learners to become a strong learner and lightGB model grows differently since it is a leafwise algorithm, it has its advantages in minimum the errors.
+reason2: it fast compare to other tree-based regressors.
+reason3: larger dataset
+reason4: I applied early stop in this tree-based regressor model. It won't have much over-fitting problem.
+
+4.3 what other methods did you consider?
+I started with the simple linear regression model. It worked not much differently. Thus, I will pick up this simple/easy model considering other limitations.
+
+5. describle how the ML algorithm that you chose works?
+I will give a general picture of it. It is a gradient boosting algorithm bascially. Boosting is that weak learners will learn from pervious mistakes.
+the successful model will find from the gradient descent. It learns step by step and finally it will stand at the global minimum.
+My LightGB model works the same way. It starts from the weak learners. Then continously learns (features)pervious mistakes to build up the strong learner.
+With the gradient descent help, it slowly moves from a starting point to either global minimum or local minimum(it is not too bad some case).
+
+
+6.1 was any encoding or transformation of features necessary?
+Yes!
+6.2 if so, what encoding/transformation did you use?
+I decided to use one-hot encoding in this project.
+
+7.1 which features had the greatest impact on salary? 
+After one hot encoding, the greatest impact feature is "milesFromMetropolis". But it is not the truth since categorical features are encoded.
+If permuted(use premutation importance), the most important feature is jobType.
+
+7.2 how did you identify these to be most significant?
+Based on the the score that a univariate lightGB model gives to each feature(high). 
+And Based on the feature importance. In other words, power of feature could predict the salaries.
+
+7.3 which features had the least impact on salary?
+jobid and companyid
+
+7.4 how did you identify these?
+Acting as a categorical feature, it contains to many unique values.
+Based on the the score that a univariate lightGB model gives to each feature(low)
+
+8.1 how did you train your model?
+I setup the proprate hyper premeters based on pervious experience. 
+Then training the model with training set and validation set is to help model estimate when it should stop and save the paremeters.
+
+8.2 during the training, what issues concerned you?
+It supposed to have the over-fitting issue and run to slow issue. But since I used a fast run algorithm and early stop, it won't be the issue anymore.
+
+9.1 please estimate the RMSE that your model will achieve on the test dataset
+I will give the number: 18.8248(the same as I valued in traning sets)
+
+9.2 how did you create this estimate?
+I checked distribution of training set. It is quite a normal distribution. Based on this assumption, I believe that incoming data will also follow the same normal distribution.
+Then I did a stats testing(T-test), in which h null is difference of mean in training and testing will be the same. I used salaries I predicted in testing set and salaries that has been given in training set.
+the result is that I could not reject the h null.
+
+10.1 what metrics, other than RMSE, would be useful for assessing the accuracy of salary estimate?
+I will suggest R square.
+
+10.2 why?
+Since it is a regrssion problem, R square could help evaluate whether it is a good fit(greater are better).
+
